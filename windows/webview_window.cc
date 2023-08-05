@@ -58,12 +58,12 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
   RegisterWindowClass(kWebViewWindowClassName, WebviewWindow::WndProc);
 
   // the same as flutter default main.cpp
-  const POINT target_point = {static_cast<LONG>(10),
-                              static_cast<LONG>(10)};
-  HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);
+  //const POINT target_point = {static_cast<LONG>(10),
+  //                            static_cast<LONG>(10)};
+  //HMONITOR monitor = MonitorFromPoint(target_point, MONITOR_DEFAULTTONEAREST);
 
-  UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
-  double scale_factor = dpi / 96.0;
+  //UINT dpi = FlutterDesktopGetDpiForMonitor(monitor);
+  //double scale_factor = dpi / 96.0;
 
   DWORD dwStyle = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
   if (openMaximized)
@@ -103,7 +103,7 @@ void WebviewWindow::CreateAndShow(const std::wstring &title, int height, int wid
     SetWindowPos(hwnd_.get(), nullptr, rc.left, rc.top, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
   }
 
-  auto title_bar_height = Scale(title_bar_height_, scale_factor);
+  //auto title_bar_height = Scale(title_bar_height_, scale_factor);
 
   // Create the browser view.
   web_view_ = std::make_unique<webview_window::WebView>(
