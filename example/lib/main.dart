@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   );
 
   bool? _webviewAvailable;
-
+  Webview? _webview;
   @override
   void initState() {
     super.initState();
@@ -112,9 +112,12 @@ class _MyAppState extends State<MyApp> {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () async {
-                    await WebviewWindow.clearAll(
+                    /*await WebviewWindow.clearAll(
                       userDataFolderWindows: await _getWebViewPath(),
-                    );
+                    );*/
+                    if (_webview != null) {
+                      _webview!.close();
+                    }
                     debugPrint('clear complete');
                   },
                   child: const Text('Clear all'),
@@ -132,9 +135,10 @@ class _MyAppState extends State<MyApp> {
       configuration: CreateConfiguration(
         userDataFolderWindows: await _getWebViewPath(),
         titleBarTopPadding: Platform.isMacOS ? 20 : 0,
-        openMaximized: true,
+        openMaximized: false,
       ),
     );
+    _webview = webview;
     webview
       ..setBrightness(Brightness.dark)
       ..setApplicationNameForUserAgent(" WebviewExample/1.0.0")

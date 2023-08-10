@@ -55,7 +55,8 @@ WebviewWindow::WebviewWindow(
     const std::string &title,
     int width,
     int height,
-    int title_bar_height
+    int title_bar_height,
+    bool full_screen
 ) : method_channel_(method_channel),
     window_id_(window_id),
     on_close_callback_(std::move(on_close_callback)),
@@ -81,9 +82,10 @@ WebviewWindow::WebviewWindow(
 
   box_ = GTK_BOX(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
   gtk_container_add(GTK_CONTAINER(window_), GTK_WIDGET(box_));
-
+  if(full_screen)
+    gtk_window_fullscreen(GTK_WINDOW(window_));
   // initial flutter_view
-  g_autoptr(FlDartProject) project = fl_dart_project_new();
+  /*g_autoptr(FlDartProject) project = fl_dart_project_new();
   const char *args[] = {"web_view_title_bar", g_strdup_printf("%ld", window_id), nullptr};
   fl_dart_project_set_dart_entrypoint_arguments(project, const_cast<char **>(args));
   auto *title_bar = fl_view_new(project);
@@ -93,7 +95,7 @@ WebviewWindow::WebviewWindow(
   client_message_channel_plugin_register_with_registrar(desktop_webview_window_registrar);
 
   gtk_widget_set_size_request(GTK_WIDGET(title_bar), -1, title_bar_height);
-  gtk_box_pack_start(box_, GTK_WIDGET(title_bar), FALSE, FALSE, 0);
+  gtk_box_pack_start(box_, GTK_WIDGET(title_bar), FALSE, FALSE, 0);*/
 
   // initial web_view
   webview_ = webkit_web_view_new();
@@ -113,7 +115,7 @@ WebviewWindow::WebviewWindow(
 
   gtk_widget_grab_focus(GTK_WIDGET(webview_));
   gtk_widget_show_all(window_);
-  gtk_widget_queue_resize(GTK_WIDGET(title_bar));
+  //gtk_widget_queue_resize(GTK_WIDGET(title_bar));
 
 }
 
@@ -216,12 +218,12 @@ gboolean WebviewWindow::DecidePolicy(WebKitPolicyDecision *decision, WebKitPolic
 }
 
 void WebviewWindow::EvaluateJavaScript(const char *java_script, FlMethodCall *call) {
-  webkit_web_view_evaluate_javascript(
+  /*webkit_web_view_run_javascript(
       WEBKIT_WEB_VIEW(webview_), java_script,-1,nullptr,nullptr, nullptr,
       [](GObject *object, GAsyncResult *result, gpointer user_data) {
         auto *call = static_cast<FlMethodCall *>(user_data);
         GError *error = nullptr;
-        auto *js_result = webkit_web_view_evaluate_javascript_finish(WEBKIT_WEB_VIEW(object), result, &error);
+        auto *js_result = webkit_web_view_run_javascript_finish(WEBKIT_WEB_VIEW(object), result, &error);
         if (!js_result) {
           fl_method_call_respond_error(call, "failed to evaluate javascript.", error->message, nullptr, nullptr);
           g_error_free(error);
@@ -231,5 +233,5 @@ void WebviewWindow::EvaluateJavaScript(const char *java_script, FlMethodCall *ca
         }
         g_object_unref(call);
       },
-      g_object_ref(call));
+      g_object_ref(call));*/
 }
